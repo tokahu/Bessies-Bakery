@@ -1,23 +1,32 @@
 import pygame
 from startbutton import StartButton
 from bakerybackgroundfile import Bakery
+from counterbgfile import Counter
+from backbuttonfile import Back
 
 pygame.init()
-# Setting game window dimensions
-pygame.init()
 pygame.font.init()
+pygame.mixer.init()
 my_font = pygame.font.SysFont('Arial', 15)
 pygame.display.set_caption("Doughville!")
+
+
+#file = '(file)'
+#pygame.mixer.music.load(file)
+#pygame.mixer.music.play()
+
 
 # set up variables for the display
 SCREEN_HEIGHT = 597
 SCREEN_WIDTH = 1000
 size = (SCREEN_WIDTH, SCREEN_HEIGHT)
-screen = pygame.display.set_mode(size)# Loading the image
+screen = pygame.display.set_mode(size)
 
 
 bg_image = Bakery(0,0)
-play_button = StartButton(500, 200)
+play_button = StartButton(400, 250)
+counter_screen = Counter(0,0)
+back_button = Back(595,20)
 
 # Variables
 game_start = False
@@ -31,11 +40,15 @@ while running:
         if event.type == pygame.MOUSEBUTTONUP:
             if play_button.rect.collidepoint(event.pos):
                 game_start = True
+            if back_button.rect.collidepoint((event.pos)):
+                game_start = False
 
     if not game_start:
         screen.blit(bg_image.image, (0, 0))
-        screen.blit(play_button.image, (100, 150))
+        screen.blit(play_button.image, (400, 250))
     else:
         screen.fill((0, 0, 0))
+        screen.blit(counter_screen.image, (0, 0))
+        screen.blit(back_button.image, (595, 20))
 
     pygame.display.update()
