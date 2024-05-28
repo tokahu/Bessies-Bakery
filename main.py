@@ -11,11 +11,14 @@ from mixingbowlfile import Bowl
 from butterfile import Butter
 from buttermeltedfile import MeltedButter
 from arrowfile import Arrow
+from speechbubblefile import SpeechBubble
 
 pygame.init()
 pygame.font.init()
 pygame.mixer.init()
-my_font = pygame.font.SysFont('Arial', 15)
+my_font = pygame.font.SysFont('elephant', 40)
+fonts = pygame.font.get_fonts()
+print(fonts)
 pygame.display.set_caption("Doughville!")
 
 
@@ -41,6 +44,7 @@ mixing_bowl = Bowl(300, 250)
 butter = Butter(700, 300)
 meltedbutter = MeltedButter(500,250)
 arrow = Arrow(895, 490)
+bubble = SpeechBubble(150, 100)
 
 music = pygame.mixer.music.load('BakerySoundtrack.mp3')
 pygame.mixer.music.play(-1)
@@ -49,7 +53,7 @@ pygame.mixer.music.play(-1)
 toppings = ["chocolate_chips", "almonds", "coconut", "sprinkles", "marshmallows", "strawberries"]
 selected_topping = random.choice(toppings)
 print(selected_topping)
-
+display_topping_text = my_font.render(selected_topping, True, (0, 0, 0))
 
 
 
@@ -75,6 +79,7 @@ while running:
                 cooking = True
             if back_button.rect.collidepoint(event.pos):
                 game_start = False
+                cooking = False
             if music_button.rect.collidepoint(event.pos):
                 music = not music
             if butter.rect.collidepoint((500,250)):
@@ -99,17 +104,18 @@ while running:
         screen.blit(back_button.image, (895, 20))
         screen.blit(music_button.image, (20, 20))
         screen.blit(arrow.image,(895, 490))
+        screen.blit(bubble.image, (150,100))
+        screen.blit(display_topping_text, (195, 200))
     if cooking:
         screen.fill((0,0,0))
         screen.blit(close_counter_screen.image, (0, 0))
         screen.blit(back_button.image, (895, 20))
         screen.blit(music_button.image, (20, 20))
         screen.blit(mixing_bowl.image, (230, 50))
-        screen.blit(butter.image, butter.rect)
-    if butterin:
-        screen.blit(butter.image, (-10000, -10000))
-        screen.blit(mixing_bowl.image, (230, 50))
-        screen.blit(meltedbutter.image, (230, 80))
+        if not butterin:
+            screen.blit(butter.image, butter.rect)
+        elif butterin:
+            screen.blit(meltedbutter.image, (230, 80))
 
     if not music:
         pygame.mixer.music.pause()
@@ -117,8 +123,6 @@ while running:
     if music:
         pygame.mixer.music.unpause()
         screen.blit(music_button.image, (20, 20))
-
-
 
 
     pygame.display.update()
