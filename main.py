@@ -13,6 +13,7 @@ from buttermeltedfile import MeltedButter
 from forwardarrowfile import ForwardArrow
 from backwardsarrowfile import BackArrow
 from speechbubblefile import SpeechBubble
+from wholeeggfile import WholeEgg
 
 pygame.init()
 pygame.font.init()
@@ -47,6 +48,7 @@ meltedbutter = MeltedButter(500,250)
 forwardarrow = ForwardArrow(895, 490)
 backarrow = BackArrow(20,490)
 bubble = SpeechBubble(150, 100)
+wholeegg = WholeEgg(230, 80)
 
 music = pygame.mixer.music.load('BakerySoundtrack.mp3')
 pygame.mixer.music.play(-1)
@@ -67,7 +69,8 @@ scene = 0
 game_start = False
 cooking = False
 music = True
-dragging = False
+draggingbutter = False
+draggingegg = False
 butterin = False
 
 # Main game loop
@@ -79,7 +82,7 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.MOUSEBUTTONUP:
-            if play_button.rect.collidepoint(event.pos):
+            if play_button.rect.collidepoint(event.pos) and scene == 0:
                 scene += 1
             if forwardarrow.rect.collidepoint(event.pos):
                 scene += 1
@@ -96,10 +99,14 @@ while running:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
                 if butter.rect.collidepoint(event.pos):
-                    dragging = True
+                    draggingbutter = True
+                if wholeegg.rect.collidepoint(event.pos):
+                    draggingegg = True
         elif event.type == pygame.MOUSEMOTION:
-            if dragging:
+            if draggingbutter:
                 butter.rect.move_ip(event.rel)
+            if draggingegg:
+                wholeegg.rect.move_ip(event.rel)
 
     if scene == 0:
         screen.fill((0, 0, 0))
@@ -126,6 +133,7 @@ while running:
             screen.blit(butter.image, butter.rect)
         elif butterin:
             screen.blit(meltedbutter.image, (230, 80))
+        screen.blit(wholeegg.image, (230, 80))
     elif scene == 3:
         screen.fill((0,0,0))
         screen.blit(forwardarrow.image, (895, 490))
