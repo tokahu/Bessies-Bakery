@@ -16,6 +16,13 @@ from speechbubblefile import SpeechBubble
 from wholeeggfile import WholeEgg
 from crackedeggfile import CrackedEgg
 from comingsoonfile import ComingSoon
+from flavormachinefile import FlavorMachine
+from chocochipfile import ChocoChip
+from coconutfile import Coconut
+from strawberryfile import Strawberry
+from sprinklesfile import Sprinkles
+from finishmixedbowlfile import FinishedBowl
+from bessiefile import Bessie
 
 pygame.init()
 pygame.font.init()
@@ -23,8 +30,7 @@ pygame.mixer.init()
 my_font = pygame.font.SysFont('elephant', 40)
 fonts = pygame.font.get_fonts()
 print(fonts)
-pygame.display.set_caption("Doughville!")
-
+pygame.display.set_caption("Bessie's Bakery!")
 
 
 
@@ -53,15 +59,33 @@ bubble = SpeechBubble(150, 100)
 wholeegg = WholeEgg(700, 300)
 crackedegg = CrackedEgg(490, 200)
 comingsoon = ComingSoon(400, 100)
+flavormachine = FlavorMachine(100, 0)
+strawberrytopping = Strawberry(200, 100)
+coconuttopping = Coconut(200, 100)
+sprinklestopping = Sprinkles(200, 100)
+chocotopping = ChocoChip(200, 100)
+mixedbowl = FinishedBowl(300, 300)
+bessiebear = Bessie(400, 300)
 
 music = pygame.mixer.music.load('BakerySoundtrack.mp3')
 pygame.mixer.music.play(-1)
 
 # Game Logic
-toppings = ["chocolate_chips", "almonds", "coconut", "sprinkles", "marshmallows", "strawberries"]
+randostrawberry = False
+randosprinkles = False
+randococonut = False
+randochocochip = False
+toppings = ["chocolate chips", "coconut", "sprinkles", "strawberries"]
 selected_topping = random.choice(toppings)
 print(selected_topping)
-display_topping_text = my_font.render(selected_topping, True, (0, 0, 0))
+if selected_topping == "chocolate chips":
+    randochocochip = True
+elif selected_topping == "coconut":
+    randococonut = True
+elif selected_topping == "strawberries":
+    randostrawberry = True
+elif selected_topping == "sprinkles":
+    randosprinkles = True
 
 
 
@@ -92,8 +116,8 @@ while running:
                 scene += 1
             elif forwardarrow.rect.collidepoint(event.pos):
                 scene += 1
-                if scene >= 3:
-                    scene = 3
+                if scene >= 4:
+                    scene = 4
             elif backarrow.rect.collidepoint(event.pos):
                 scene -= 1
                 if scene <= 0:
@@ -125,8 +149,16 @@ while running:
         screen.blit(play_button.image, (400, 250))
     elif scene == 1:
         screen.blit(counter_screen.image, (0, 0))
+        screen.blit(bessiebear.image, (460, 180))
         screen.blit(bubble.image, (150, 100))
-        screen.blit(display_topping_text, (195, 200))
+        if randostrawberry:
+            screen.blit(strawberrytopping.image, (260, 170))
+        elif randococonut:
+            screen.blit(coconuttopping.image, (280, 180))
+        elif randosprinkles:
+            screen.blit(sprinklestopping.image, (240, 165))
+        elif randochocochip:
+            screen.blit(chocotopping.image, (260, 180))
     elif scene == 2:
         screen.blit(close_counter_screen.image, (0, 0))
         screen.blit(mixing_bowl.image, (230, 50))
@@ -139,6 +171,10 @@ while running:
         elif eggin:
             screen.blit(crackedegg.image, (310, 110))
     elif scene == 3:
+        screen.blit(counter_screen.image, (0, 0))
+        screen.blit(flavormachine.image, (130, -50))
+        screen.blit(mixedbowl.image, (390, 340))
+    elif scene == 4:
         screen.fill((176, 139, 120))
         screen.blit(comingsoon.image, (250, 50))
     if scene != 0:
